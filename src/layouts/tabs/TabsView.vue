@@ -23,7 +23,7 @@
 
 <script>
 import AdminLayout from '@/layouts/AdminLayout'
-import Contextmenu from '@/components/menu/Contextmenu'
+import Contextmenu from '../menu/Contextmenu'
 import PageToggleTransition from '@/components/transition/PageToggleTransition'
 import {mapState, mapMutations} from 'vuex'
 import {getI18nKey} from '@/utils/routerUtil'
