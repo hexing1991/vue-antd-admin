@@ -1,7 +1,5 @@
 import {loadRoutes, loadGuards, setAppOptions} from '@/utils/routerUtil'
-import {loadInterceptors} from '@/utils/request'
 import guards from '@/router/guards'
-import interceptors from '@/utils/axios-interceptors'
 
 /**
  * 启动引导方法
@@ -14,8 +12,6 @@ import interceptors from '@/utils/axios-interceptors'
 function bootstrap({router, store, i18n, message}) {
   // 设置应用配置
   setAppOptions({router, store, i18n})
-  // 加载 axios 拦截器
-  loadInterceptors(interceptors, {router, store, i18n, message})
   // 加载路由
   loadRoutes()
   // 加载路由守卫

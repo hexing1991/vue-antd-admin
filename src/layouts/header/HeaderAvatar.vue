@@ -1,8 +1,8 @@
 <template>
   <a-dropdown>
     <div class="header-avatar" style="cursor: pointer">
-      <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar"/>
-      <span class="name">{{user.name}}</span>
+      <a-avatar class="avatar" size="small" shape="circle" src="" />
+      <span class="name">{{userName}}</span>
     </div>
     <a-menu :class="['avatar-menu']" slot="overlay">
       <a-menu-item>
@@ -23,17 +23,16 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import {logout} from '@/services/user'
+import { mapState } from 'vuex'
 
 export default {
   name: 'HeaderAvatar',
   computed: {
-    ...mapGetters('account', ['user']),
+    ...mapState(['userName']),
   },
   methods: {
-    logout() {
-      logout()
+    async logout () {
+      await this.$store.dispatch('Logout')
       this.$router.push('/login')
     }
   }
@@ -41,20 +40,20 @@ export default {
 </script>
 
 <style lang="less">
-  .header-avatar{
-    display: inline-flex;
-    .avatar, .name{
-      align-self: center;
-    }
-    .avatar{
-      margin-right: 8px;
-    }
-    .name{
-      font-weight: 500;
-    }
+.header-avatar {
+  display: inline-flex;
+  .avatar,
+  .name {
+    align-self: center;
   }
-  .avatar-menu{
-    width: 150px;
+  .avatar {
+    margin-right: 8px;
   }
-
+  .name {
+    font-weight: 500;
+  }
+}
+.avatar-menu {
+  width: 150px;
+}
 </style>

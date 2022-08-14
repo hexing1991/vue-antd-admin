@@ -1,4 +1,5 @@
-import account from './account'
+import user from './user'
 import setting from './setting'
+import dict from './dict'
 
-export default {account, setting}
+export default { user, dict, setting }

@@ -1,191 +1,189 @@
 <template>
-  <common-layout>
-    <div class="top">
-      <div class="header">
-        <img alt="logo" class="logo" src="@/assets/img/logo.png" />
-        <span class="title">{{systemName}}</span>
+  <div id="userLayout" :class="['user-layout-wrapper']">
+    <div class="container">
+      <div class="user-layout-content">
+        <div class="login-box">
+          <div class="top">
+            <div class="header">
+              <span class="title">{{ title }}</span>
+            </div>
+          </div>
+          <div class="main">
+            <a-form class="user-layout-login" ref="formLogin" :form="form" @submit="handleSubmit">
+              <a-tabs activeKey="tab1" :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }">
+                <a-tab-pane key="tab1" tab="账号密码登录">
+                  <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" :message="errorMsg||'账户或密码错误'" />
+                  <a-form-item>
+                    <a-input size="large" placeholder="登录账户" :maxLength="20" v-decorator="['userAccount',{rules: [{ required: true, min: 6, max: 20,message: '请输入正确的帐户' }]}]" autocomplete="off">
+                      <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
+                    </a-input>
+                  </a-form-item>
+                  <a-form-item>
+                    <a-input-password size="large" placeholder="登录密码" :maxLength="20" v-decorator="['userPassword',{rules: [{ required: true, min: 6, max: 20,message: '请输入正确的密码' }]}]">
+                      <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
+                    </a-input-password>
+                  </a-form-item>
+                  <a-form-item>
+                    <a-input size="large" placeholder="验证码" :maxLength="4" v-decorator="['yzm',{rules: [{ required: true, min: 4, max: 4,message: '请输入验证码' }]}]" autocomplete="off">
+                      <a-icon slot="prefix" type="property-safety" :style="{ color: 'rgba(0,0,0,.25)' }" />
+                      <img slot="addonAfter" :src="yzmImg" @click="onYzm" />
+                    </a-input>
+                  </a-form-item>
+                </a-tab-pane>
+              </a-tabs>
+              <a-form-item>
+                <a-button size="large" type="primary" htmlType="submit" class="login-button" :loading="loginBtn" :disabled="loginBtn">登录</a-button>
+              </a-form-item>
+            </a-form>
+          </div>
+          <div class="footer">
+            <div class="copyright">技术支持 湖北省楚天云有限公司</div>
+            <div class="copyright">版本号 V1.0.1</div>
+          </div>
+        </div>
       </div>
-      <div class="desc">Ant Design 是西湖区最具影响力的 Web 设计规范</div>
     </div>
-    <div class="login">
-      <a-form @submit="onSubmit" :form="form">
-        <a-tabs size="large" :tabBarStyle="{textAlign: 'center'}" style="padding: 0 2px;">
-          <a-tab-pane tab="账户密码登录" key="1">
-            <a-alert type="error" :closable="true" v-show="error" :message="error" showIcon style="margin-bottom: 24px;" />
-            <a-form-item>
-              <a-input
-                autocomplete="autocomplete"
-                size="large"
-                placeholder="admin"
-                v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]"
-              >
-                <a-icon slot="prefix" type="user" />
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-input
-                size="large"
-                placeholder="888888"
-                autocomplete="autocomplete"
-                type="password"
-                v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
-              >
-                <a-icon slot="prefix" type="lock" />
-              </a-input>
-            </a-form-item>
-          </a-tab-pane>
-          <a-tab-pane tab="手机号登录" key="2">
-            <a-form-item>
-              <a-input size="large" placeholder="mobile number" >
-                <a-icon slot="prefix" type="mobile" />
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-row :gutter="8" style="margin: 0 -4px">
-                <a-col :span="16">
-                  <a-input size="large" placeholder="captcha">
-                    <a-icon slot="prefix" type="mail" />
-                  </a-input>
-                </a-col>
-                <a-col :span="8" style="padding-left: 4px">
-                  <a-button style="width: 100%" class="captcha-button" size="large">获取验证码</a-button>
-                </a-col>
-              </a-row>
-            </a-form-item>
-          </a-tab-pane>
-        </a-tabs>
-        <div>
-          <a-checkbox :checked="true" >自动登录</a-checkbox>
-          <a style="float: right">忘记密码</a>
-        </div>
-        <a-form-item>
-          <a-button :loading="logging" style="width: 100%;margin-top: 24px" size="large" htmlType="submit" type="primary">登录</a-button>
-        </a-form-item>
-        <div>
-          其他登录方式
-          <a-icon class="icon" type="alipay-circle" />
-          <a-icon class="icon" type="taobao-circle" />
-          <a-icon class="icon" type="weibo-circle" />
-          <router-link style="float: right" to="/dashboard/workplace" >注册账户</router-link>
-        </div>
-      </a-form>
-    </div>
-  </common-layout>
+  </div>
 </template>
 
 <script>
-import CommonLayout from '@/layouts/CommonLayout'
-import {login, getRoutesConfig} from '@/services/user'
-import {setAuthorization} from '@/utils/request'
-import {loadRoutes} from '@/utils/routerUtil'
-import {mapMutations} from 'vuex'
+import { getYzm } from '@/api/user'
 
 export default {
-  name: 'Login',
-  components: {CommonLayout},
+  name: 'LoginForm',
   data () {
+    const form = this.$form.createForm(this)
     return {
-      logging: false,
-      error: '',
-      form: this.$form.createForm(this)
+      title: process.env.VUE_APP_TITLE,
+      loginBtn: false,
+      isLoginError: false,
+      errorMsg: '',
+      timestamp: '',
+      sign: '',
+      yzmImg: '',
+      form
     }
   },
-  computed: {
-    systemName () {
-      return this.$store.state.setting.systemName
-    }
+  created () {
+    this.onYzm()
   },
   methods: {
-    ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
-    onSubmit (e) {
+    handleSubmit (e) {
       e.preventDefault()
-      this.form.validateFields((err) => {
-        if (!err) {
-          this.logging = true
-          const name = this.form.getFieldValue('name')
-          const password = this.form.getFieldValue('password')
-          login(name, password).then(this.afterLogin)
+      this.form.validateFields(async (err, values) => {
+        if (err) return
+        this.loginBtn = true
+        try {
+          await this.$store.dispatch('Login', { ...values, timestamp: this.timestamp, sign: this.sign })
+          this.$router.push('/sys/dept')
+          this.isLoginError = false
+        } catch (ex) {
+          this.errorMsg = ex.message
+          this.isLoginError = true
+        } finally {
+          this.loginBtn = false
+          this.onYzm()
         }
       })
     },
-    afterLogin(res) {
-      this.logging = false
-      const loginRes = res.data
-      if (loginRes.code >= 0) {
-        const {user, permissions, roles} = loginRes.data
-        this.setUser(user)
-        this.setPermissions(permissions)
-        this.setRoles(roles)
-        setAuthorization({token: loginRes.data.token, expireAt: new Date(loginRes.data.expireAt)})
-        // 获取路由配置
-        getRoutesConfig().then(result => {
-          const routesConfig = result.data.data
-          loadRoutes(routesConfig)
-          this.$router.push('/dashboard/workplace')
-          this.$message.success(loginRes.message, 3)
-        })
-      } else {
-        this.error = loginRes.message
+    onYzm () {
+      getYzm().then(r => {
+        if (r.code !== 0) {
+          this.errorMsg = r.msg
+          this.isLoginError = true
+          this.sign = null
+          this.timestamp = null
+          this.yzmImg = null
+          return
+        }
+        const ss = r.data.yzmSign.split(',')
+        this.sign = ss[0]
+        this.timestamp = ss[1]
+        this.yzmImg = 'data:image/jpg;base64,' + r.data.base64
+      }).catch(e => {
+        this.errorMsg = e.message
+        this.isLoginError = true
+      })
+    }
+  }
+}
+
+</script>
+
+<style lang="less" scoped>
+#userLayout.user-layout-wrapper {
+  height: 100%;
+
+  &.mobile {
+    .container {
+      .main {
+        max-width: 368px;
+        width: 98%;
+      }
+    }
+  }
+
+  .container {
+    width: 100%;
+    min-height: 100%;
+    background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
+    background-size: 100%;
+    position: relative;
+
+    .user-layout-content {
+      padding: 100px 0 24px;
+      position: relative;
+      .login-box {
+        width: 368px;
+        position: absolute;
+        left: 10%;
+        top: 300px;
+      }
+      .top {
+        text-align: center;
+
+        .header {
+          height: 44px;
+          line-height: 44px;
+          .title {
+            font-size: 33px;
+            color: rgba(0, 0, 0, 0.85);
+            font-family: Avenir, "Helvetica Neue", Arial, Helvetica, sans-serif;
+            font-weight: 600;
+            position: relative;
+            top: 2px;
+          }
+        }
+      }
+
+      .main {
+        min-width: 260px;
+        width: 368px;
+        margin: 0 auto;
+      }
+
+      .footer {
+        width: 100%;
+        bottom: 0;
+        padding: 0 16px;
+        margin: 48px 0 24px;
+        text-align: center;
+
+        .copyright {
+          color: rgba(0, 0, 0, 0.45);
+          font-size: 14px;
+        }
       }
     }
   }
 }
-</script>
 
-<style lang="less" scoped>
-  .common-layout{
-    .top {
-      text-align: center;
-      .header {
-        height: 44px;
-        line-height: 44px;
-        a {
-          text-decoration: none;
-        }
-        .logo {
-          height: 44px;
-          vertical-align: top;
-          margin-right: 16px;
-        }
-        .title {
-          font-size: 33px;
-          color: @title-color;
-          font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-          font-weight: 600;
-          position: relative;
-          top: 2px;
-        }
-      }
-      .desc {
-        font-size: 14px;
-        color: @text-color-second;
-        margin-top: 12px;
-        margin-bottom: 40px;
-      }
-    }
-    .login{
-      width: 368px;
-      margin: 0 auto;
-      @media screen and (max-width: 576px) {
-        width: 95%;
-      }
-      @media screen and (max-width: 320px) {
-        .captcha-button{
-          font-size: 14px;
-        }
-      }
-      .icon {
-        font-size: 24px;
-        color: @text-color-second;
-        margin-left: 16px;
-        vertical-align: middle;
-        cursor: pointer;
-        transition: color 0.3s;
-
-        &:hover {
-          color: @primary-color;
-        }
-      }
-    }
+.user-layout-login {
+  button.login-button {
+    padding: 0 15px;
+    font-size: 16px;
+    height: 40px;
+    width: 100%;
   }
+}
 </style>

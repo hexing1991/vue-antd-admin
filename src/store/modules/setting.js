@@ -1,13 +1,102 @@
 import config from '@/config'
-import {ADMIN} from '@/config/default'
-import {formatFullPath} from '@/utils/i18n'
-import {filterMenu} from '@/utils/authority-utils'
-import {getLocalSetting} from '@/utils/themeUtil'
-import deepClone from 'lodash.clonedeep'
+import { ADMIN } from '@/config/default'
+import { formatFullPath } from '@/utils/i18n'
+import { getLocalSetting } from '@/utils/themeUtil'
+import routerMap from '@/router/async/router.map'
 
 const localSetting = getLocalSetting(true)
 const customTitlesStr = sessionStorage.getItem(process.env.VUE_APP_TBAS_TITLES_KEY)
 const customTitles = (customTitlesStr && JSON.parse(customTitlesStr)) || []
+
+/**
+ * 动态创建菜单
+ * @param {*} resources
+ */
+function createAsynRoutes (resources) {
+  // 首先菜单排序
+  resources.sort((a, b) => {
+    if (a.resourceType !== b.resourceType) {
+      return a.resourceType - b.resourceType
+    } else {
+      return a.sortNo - b.sortNo
+    }
+  })
+  const tempMap = {}
+  const list = []
+  for (let i = 0, len = resources.length; i < len; i++) {
+    const m = resources[i]
+    // 二级权限
+    if (m.resourceType > 1) continue
+    // 菜单大类
+    if (m.resourceType === 0) {
+      const route = {
+        path: '/' + m.resourceUrl,
+        component: () => import('@/layouts/BlankView'),
+        name: m.resourceName,
+        meta: {
+          icon: m.resourceIcon,
+          isFolder: true
+        },
+        sortNo: m.sortNo
+      }
+      list.push(route)
+      tempMap[m.id] = route
+    } else if (m.resourceType === 1 && routerMap[m.resourceUrl]) {
+      if (tempMap[m.pid]) {
+        const item = {
+          path: tempMap[m.pid].path + '/' + m.resourceUrl,
+          component: routerMap[m.resourceUrl].component,
+          name: m.resourceName,
+          meta: {
+            ...(routerMap[m.resourceUrl].meta || {})
+          }
+        }
+
+        if (tempMap[m.pid].children) {
+          tempMap[m.pid].children.push(item)
+        } else {
+          tempMap[m.pid].children = [item]
+        }
+      } else {
+        list.push({
+          path: '/' + m.resourceUrl,
+          component: routerMap[m.resourceUrl].component,
+          name: m.resourceName,
+          meta: {
+            icon: m.resourceIcon,
+            ...(routerMap[m.resourceUrl].meta || {})
+          },
+          sortNo: m.sortNo
+        })
+      }
+    }
+  }
+  const children = list.filter(m => !(m.meta.isFolder && !m.children))
+  children.sort((a, b) => a.sortNo - b.sortNo)
+  return [
+    {
+      path: '/login',
+      name: '登录页',
+      component: () => import('@/pages/login/Login')
+    },
+    {
+      path: '*',
+      name: '404',
+      component: () => import('@/pages/exception/404'),
+    },
+    {
+      path: '/403',
+      name: '403',
+      component: () => import('@/pages/exception/403'),
+    },
+    {
+      path: '/',
+      component: () => import('@/layouts/tabs'),
+      redirect: '/home/index',
+      name: '首页',
+      children
+    }]
+}
 
 export default {
   namespaced: true,
@@ -23,26 +112,22 @@ export default {
     ...localSetting
   },
   getters: {
-    menuData(state, getters, rootState) {
-      if (state.filterMenu) {
-        const {permissions, roles} = rootState.account
-        return filterMenu(deepClone(state.menuData), permissions, roles)
-      }
+    menuData (state) {
       return state.menuData
     },
-    firstMenu(state, getters) {
-      const {menuData} = getters
+    firstMenu (state, getters) {
+      const { menuData } = getters
       if (menuData.length > 0 && !menuData[0].fullPath) {
         formatFullPath(menuData)
       }
       return menuData.map(item => {
-        const menuItem = {...item}
+        const menuItem = { ...item }
         delete menuItem.children
         return menuItem
       })
     },
-    subMenu(state) {
-      const {menuData, activatedFirst} = state
+    subMenu (state) {
+      const { menuData, activatedFirst } = state
       if (menuData.length > 0 && !menuData[0].fullPath) {
         formatFullPath(menuData)
       }
@@ -66,49 +151,49 @@ export default {
     setAnimate (state, animate) {
       state.animate = animate
     },
-    setWeekMode(state, weekMode) {
+    setWeekMode (state, weekMode) {
       state.weekMode = weekMode
     },
-    setFixedHeader(state, fixedHeader) {
+    setFixedHeader (state, fixedHeader) {
       state.fixedHeader = fixedHeader
     },
-    setFixedSideBar(state, fixedSideBar) {
+    setFixedSideBar (state, fixedSideBar) {
       state.fixedSideBar = fixedSideBar
     },
-    setLang(state, lang) {
+    setLang (state, lang) {
       state.lang = lang
     },
-    setHideSetting(state, hideSetting) {
+    setHideSetting (state, hideSetting) {
       state.hideSetting = hideSetting
     },
-    correctPageMinHeight(state, minHeight) {
+    correctPageMinHeight (state, minHeight) {
       state.pageMinHeight += minHeight
     },
-    setMenuData(state, menuData) {
+    setMenuData (state, menuData) {
       state.menuData = menuData
     },
-    setAsyncRoutes(state, asyncRoutes) {
-      state.asyncRoutes = asyncRoutes
-    },
-    setPageWidth(state, pageWidth) {
+    setPageWidth (state, pageWidth) {
       state.pageWidth = pageWidth
     },
-    setActivatedFirst(state, activatedFirst) {
+    setActivatedFirst (state, activatedFirst) {
       state.activatedFirst = activatedFirst
     },
-    setFixedTabs(state, fixedTabs) {
+    setFixedTabs (state, fixedTabs) {
       state.fixedTabs = fixedTabs
     },
-    setCustomTitle(state, {path, title}) {
+    setCustomTitle (state, { path, title }) {
       if (title) {
         const obj = state.customTitles.find(item => item.path === path)
         if (obj) {
           obj.title = title
         } else {
-          state.customTitles.push({path, title})
+          state.customTitles.push({ path, title })
         }
         sessionStorage.setItem(process.env.VUE_APP_TBAS_TITLES_KEY, JSON.stringify(state.customTitles))
       }
+    },
+    setMenu (state, menus) {
+      state.menuData = createAsynRoutes(menus)
     }
   }
 }
