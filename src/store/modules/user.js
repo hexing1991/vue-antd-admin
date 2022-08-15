@@ -3,6 +3,7 @@ import { login, getInfo } from '@/api/user'
 import { Base64 } from 'js-base64'
 const ACCESS_TOKEN = 'token'
 const user = {
+  namespaced: true,
   state: {
     token: storage.get(ACCESS_TOKEN),
     userId: '',
@@ -15,7 +16,6 @@ const user = {
     resources: [],
     authorities:[]
   },
-
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token

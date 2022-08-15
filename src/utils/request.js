@@ -36,7 +36,7 @@ service.interceptors.response.use(
         Modal.confirm({
           title: '温馨提示',
           content: '您的登录状态已过期，请重新登录！',
-          onOk: () => store.dispatch('Logout').then(() => location.reload())
+          onOk: () => store.dispatch('user/Logout').then(() => location.reload())
         })
         return
       }

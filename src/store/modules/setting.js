@@ -92,9 +92,21 @@ function createAsynRoutes (resources) {
     {
       path: '/',
       component: () => import('@/layouts/tabs'),
-      redirect: '/home/index',
-      name: '首页',
-      children
+      redirect: '/dashboard/workplace',
+      children: [
+        {
+          path: '/dashboard/workplace',
+          name: '工作台',
+          meta: {
+            icon: 'dashboard',
+            page: {
+              closable: false
+            }
+          },
+          component: () => import('@/pages/dashboard/workplace'),
+        },
+        ...children
+      ]
     }]
 }
 

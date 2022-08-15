@@ -74,8 +74,8 @@ export default {
         if (err) return
         this.loginBtn = true
         try {
-          await this.$store.dispatch('Login', { ...values, timestamp: this.timestamp, sign: this.sign })
-          this.$router.push('/sys/dept')
+          await this.$store.dispatch('user/Login', { ...values, timestamp: this.timestamp, sign: this.sign })
+          this.$router.push('/')
           this.isLoginError = false
         } catch (ex) {
           this.errorMsg = ex.message

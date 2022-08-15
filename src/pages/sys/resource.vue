@@ -1,8 +1,10 @@
 <template>
   <a-card :bordered="false">
-    <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
-    </div>
+    <a-form layout="inline" style="margin-bottom:10px;">
+      <a-form-item>
+        <a-button type="primary" @click="handleAdd">新建</a-button>
+      </a-form-item>
+    </a-form>
     <a-table :columns="columns" :data-source="list" :pagination="false" rowKey="id" bordered>
       <a-icon slot="icon" slot-scope="text" :component="icons[text]" />
       <span slot="type" slot-scope="text">{{ text | dict('RESOURCE_TYPE') }}</span>

@@ -39,7 +39,7 @@ const refreshGuard = async (to, from, next) => {
   if(loginIgnore.includes(to)) next()
   if (store.state.user.roles.length === 0) {
     try {
-      const res = await store.dispatch('GetInfo')
+      const res = await store.dispatch('user/GetInfo')
       console.log(res)
       if (!res.roles || res.roles.length === 0) {
         return next({ path: '/login' })

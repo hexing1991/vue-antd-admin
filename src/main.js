@@ -8,6 +8,7 @@ import 'animate.css/source/animate.css'
 import Plugins from '@/plugins'
 import { initI18n } from '@/utils/i18n'
 import bootstrap from '@/bootstrap'
+import './utils/filter'
 import 'moment/locale/zh-cn'
 
 const router = initRouter()

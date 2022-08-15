@@ -1,5 +1,6 @@
 // 此配置为系统默认设置，需修改的设置项，在src/config/config.js中添加修改项即可。也可直接在此文件中修改。
 module.exports = {
+  useI18n: false,
   lang: 'CN',                           //语言，可选 CN(简体)、HK(繁体)、US(英语)，也可扩展其它语言
   theme: {                              //主题
     color: '#1890ff',                   //主题色
@@ -26,8 +27,8 @@ module.exports = {
     direction: 'left'                   //动画方向，切换页面时动画的方向，参考 ./animate.config.js
   },
   footerLinks: [                        //页面底部链接，{link: '链接地址', name: '名称/显示文字', icon: '图标，支持 ant design vue 图标库'}
-    {link: 'https://pro.ant.design', name: 'Pro首页'},
-    {link: 'https://github.com/iczer/vue-antd-admin', icon: 'github'},
-    {link: 'https://ant.design', name: 'Ant Design'}
+    { link: 'https://pro.ant.design', name: 'Pro首页' },
+    { link: 'https://github.com/iczer/vue-antd-admin', icon: 'github' },
+    { link: 'https://ant.design', name: 'Ant Design' }
   ],
 }

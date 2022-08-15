@@ -24,6 +24,7 @@ function deptListToTree (list) {
 }
 
 const dict = {
+  namespaced: true,
   state: {
     loaded: false,
     paramLoaded: false,
@@ -52,9 +53,6 @@ const dict = {
   mutations: {
     SET_DICT: (state, { type, dict }) => {
       state[type] = dict
-    },
-    SET_SYS: (state, { type, dict }) => {
-      state.systemConfig[type] = dict
     },
     SET_FLAG: (state, loaded) => {
       state.loaded = loaded

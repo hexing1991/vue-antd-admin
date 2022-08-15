@@ -8,19 +8,13 @@ const view = {
 // 路由组件注册
 const routerMap = {
   login: {
-    authority: '*',
     path: '/login',
     component: () => import('@/pages/login/Login')
   },
   root: {
     path: '/',
-    name: '首页',
-    redirect: '/login',
+    redirect: '/dashboard/workplace',
     component: view.tabs
-  },
-  dashboard: {
-    name: 'Dashboard',
-    component: view.blank
   },
   dept: {
     component: () => import('@/pages/sys/dept')
@@ -37,11 +31,6 @@ const routerMap = {
   dict: {
     component: () => import('@/pages/sys/dict')
   },
-  exception: {
-    name: '异常页',
-    icon: 'warning',
-    component: view.blank
-  },
   exp403: {
     authority: '*',
     name: 'exp403',
@@ -52,11 +41,6 @@ const routerMap = {
     name: 'exp404',
     path: '404',
     component: () => import('@/pages/exception/404')
-  },
-  exp500: {
-    name: 'exp500',
-    path: '500',
-    component: () => import('@/pages/exception/500')
   }
 }
 export default routerMap

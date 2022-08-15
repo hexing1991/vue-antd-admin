@@ -21,9 +21,11 @@
     </a-col>
     <a-col :span="24" :md="14" :lg="18" :xl="20">
       <a-card :title="dictTitle" :bodyStyle="{ overflowX: 'auto', padding: '10px',height: `calc(100vh - 185px)`,overflowY: 'auto' }" :bordered="false">
-        <div class="table-operator">
-          <a-button type="primary" icon="plus" @click="handleAddItem">新建</a-button>
-        </div>
+        <a-form layout="inline" style="margin-bottom:10px;">
+          <a-form-item>
+            <a-button type="primary" @click="handleAddItem">新建</a-button>
+          </a-form-item>
+        </a-form>
         <a-table rowKey="id" :columns="columns" :scroll="{ x: 1000 }" :data-source="dicts" :pagination="false" bordered>
           <span slot="serial" slot-scope="text, record, index">
             {{ index + 1 }}
@@ -48,7 +50,6 @@
 import { list, add, update, del, listItem, addItem, updateItem, delItem } from '@/api/dict'
 import CreateItemForm from './dict-item-create'
 import CreateForm from './dict-create'
-import { Tree } from 'ant-design-vue'
 
 const columns = [
   {
@@ -99,8 +100,7 @@ const columns = [
 
 export default {
   name: 'SysDict',
-  inject: ['reload'],
-  components: { CreateItemForm, CreateForm, ATree: Tree },
+  components: { CreateItemForm, CreateForm },
   data () {
     return {
       columns,
@@ -194,7 +194,7 @@ export default {
       if (res.code !== 0) return this.$message.error(res.msg)
       this.visible = false
       this.$message.success(values.id ? '修改成功' : '新增成功')
-      this.reload()
+      this.$emit('refresh', null, this)
     },
     async handleOkItem (values) {
       this.confirmLoadingItem = true

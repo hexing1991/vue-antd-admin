@@ -6,7 +6,7 @@
       </a>
     </div>
     <div class="copyright">
-      Copyright<a-icon type="copyright" />{{copyright}}
+      技术支持 {{copyright}}
     </div>
   </div>
 </template>

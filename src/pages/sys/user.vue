@@ -143,7 +143,7 @@ export default {
   created () {
     const key = this.$store.state.user.userDeptId
     this.queryParam.userDept = key
-    Promise.all([this.loadRoles(), this.$store.dispatch('LoadDepts', key)]).then(() => {
+    Promise.all([this.loadRoles(), this.$store.dispatch('dict/LoadDepts', key)]).then(() => {
       this.rootDeptId = [key]
       this.$refs.table.refresh(true)
     })
