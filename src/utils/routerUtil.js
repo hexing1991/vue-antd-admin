@@ -1,7 +1,5 @@
-import routerMap from '@/router/async/router.map'
 import { mergeI18nFromRoutes } from '@/utils/i18n'
 import Router from 'vue-router'
-import basicOptions from '@/router/async/config.async'
 
 //应用配置
 let appOptions = {
@@ -28,6 +26,7 @@ function setAppOptions (options) {
  */
 function parseRoutes (routesConfig, routerMap) {
   let routes = []
+  console.log(routesConfig)
   routesConfig.forEach(item => {
     // 获取注册在 routerMap 中的 router，初始化 routeCfg
     let router = undefined, routeCfg = {}
@@ -100,12 +99,10 @@ function loadRoutes (routesConfig) {
   const { router, store, i18n } = appOptions
 
   if (routesConfig && routesConfig.length > 0) {
-    const routes = parseRoutes(routesConfig, routerMap)
-    const finalRoutes = mergeRoutes(basicOptions.routes, routes)
-    formatRoutes(finalRoutes)
-    router.options = { ...router.options, routes: finalRoutes }
+    const routes = routesConfig
+    router.options = { ...router.options, routes }
     router.matcher = new Router({ ...router.options, routes: [] }).matcher
-    finalRoutes.forEach(route => router.addRoute(route))
+    routes.forEach(route => router.addRoute(route))
   }
   // 提取路由国际化数据
   mergeI18nFromRoutes(i18n, router.options.routes)
@@ -115,19 +112,6 @@ function loadRoutes (routesConfig) {
   if (menuRoutes) {
     store.commit('setting/setMenuData', menuRoutes)
   }
-}
-
-/**
- * 合并路由
- * @param target {Route[]}
- * @param source {Route[]}
- * @returns {Route[]}
- */
-function mergeRoutes (target, source) {
-  const routesMap = {}
-  target.forEach(item => routesMap[item.path] = item)
-  source.forEach(item => routesMap[item.path] = item)
-  return Object.values(routesMap)
 }
 
 /**

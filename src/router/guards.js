@@ -16,6 +16,7 @@ const progressStart = (to, from, next) => {
   if (!NProgress.isStarted()) {
     NProgress.start()
   }
+  console.log(to.path)
   next()
 }
 
@@ -29,29 +30,36 @@ const progressStart = (to, from, next) => {
 const loginGuard = (to, from, next, options) => {
   if (!loginIgnore.includes(to) && !checkAuthorization()) {
     options.message.warning('登录已失效，请重新登录')
-    next({ path: '/login' })
+    next('/login')
   } else {
     next()
   }
 }
 
+/**
+ * 处理刷新
+ * @param {*} to 
+ * @param {*} from 
+ * @param {*} next 
+ * @returns 
+ */
 const refreshGuard = async (to, from, next) => {
-  if(loginIgnore.includes(to)) next()
-  if (store.state.user.roles.length === 0) {
-    try {
-      const res = await store.dispatch('user/GetInfo')
-      console.log(res)
-      if (!res.roles || res.roles.length === 0) {
-        return next({ path: '/login' })
-      }
-      store.commit('setting/setMenu', res.resources)
-      loadRoutes(store.state.setting.menuData)
-    } catch (e) {
-      console.log(e)
-      return next({ path: '/login' })
-    }
+  if (loginIgnore.includes(to)) return next()
+  if (store.state.user.roles.length > 0) return next()
+  let res = null
+  try {
+    res = await store.dispatch('user/GetInfo')
+  } catch (e) {
+    console.log(e)
+    return next('/login')
   }
-  next()
+  if (!res.roles || res.roles.length === 0) {
+    next('/login')
+  } else {
+    store.commit('setting/setMenu', res.resources)
+    loadRoutes(store.state.setting.menuData)
+    next({ path: to.path })
+  }
 }
 
 /**
@@ -63,6 +71,7 @@ const refreshGuard = async (to, from, next) => {
  * @returns {*}
  */
 const redirectGuard = (to, from, next, options) => {
+  if (loginIgnore.includes(to)) return next()
   const { store } = options
   const getFirstChild = (routes) => {
     const route = routes[0]
