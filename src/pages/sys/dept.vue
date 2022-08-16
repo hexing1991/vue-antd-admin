@@ -40,7 +40,6 @@
 import STable from '@/components/table'
 import { page, add, update, del } from '@/api/dept'
 import CreateForm from './dept-create'
-import { Tree } from 'ant-design-vue'
 
 const columns = [
   {
@@ -96,7 +95,7 @@ const columns = [
 
 export default {
   name: 'SysDept',
-  components: { STable, ATree: Tree, CreateForm },
+  components: { STable, CreateForm },
   data () {
     return {
       columns,

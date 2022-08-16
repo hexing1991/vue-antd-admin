@@ -6,7 +6,7 @@
       </a-form-item>
     </a-form>
     <a-table :columns="columns" :data-source="list" :pagination="false" rowKey="id" bordered>
-      <a-icon slot="icon" slot-scope="text" :component="icons[text]" />
+      <a-icon slot="icon" slot-scope="text" :type="text" />
       <span slot="type" slot-scope="text">{{ text | dict('RESOURCE_TYPE') }}</span>
       <span slot="action" slot-scope="text, record">
         <template>
@@ -24,9 +24,6 @@
 <script>
 import { list, add, update, del, refreshResources } from '@/api/resource'
 import CreateForm from './resource-create'
-// import icons from '@/core/icons'
-const icons = []
-// TODO
 
 const columns = [
   {
@@ -72,7 +69,6 @@ export default {
   components: { CreateForm },
   data () {
     return {
-      icons,
       columns,
       list: [],
       visible: false,

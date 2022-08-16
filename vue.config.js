@@ -13,7 +13,7 @@ module.exports = {
     port: 8000,
     proxy: {
       '/api': {
-        target: 'https://jkmhyglpt.chutianyun.gov.cn:9081/ctyhw-api/',
+        target: 'https://zysq.bsbydd.com:1443/zytyjr-api/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

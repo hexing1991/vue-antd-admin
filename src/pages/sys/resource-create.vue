@@ -1,5 +1,5 @@
 <template>
-  <a-modal :title="title" :width="500" :visible="visible" :confirmLoading="loading" @ok="handleOk" @cancel="handleCancel">
+  <a-modal :title="title" :width="800" :visible="visible" :confirmLoading="loading" @ok="handleOk" @cancel="handleCancel">
     <a-spin :spinning="loading">
       <a-form-model ref="myForm" :model="form" :rules="rules" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
         <a-form-model-item label="上级资源" prop="pid">
@@ -20,12 +20,7 @@
           <a-input v-else v-model="form.resourceUrl" :maxLength="50" placeholder="请输入资源URL" />
         </a-form-model-item>
         <a-form-model-item v-if="form.resourceType === 0 || form.resourceType === 1" label="资源图标" prop="resourceIcon">
-          <a-select v-model="form.resourceIcon" style="width: 100%" placeholder="请选择资源图标" showSearch allowClear>
-            <a-select-option key="无">无</a-select-option>
-            <a-select-option v-for="(v,r) in icons" :key="r">
-              <a-icon :component="icons[r]" /><span style="margin-left:10px;">{{ r }}</span>
-            </a-select-option>
-          </a-select>
+          <icon-selector v-model="form.resourceIcon"/>
         </a-form-model-item>
         <a-form-model-item label="排序" prop="sortNo">
           <a-input-number v-model="form.sortNo" :min="0" :max="1000" style="width: 100%;" />
@@ -40,18 +35,14 @@
 
 <script>
 import pick from 'lodash.pick'
-// import icons from '@/core/icons'
-const icons = []
-// import { RouteMap } from '@/config/router.config'
-const RouteMap = []
-// TODO
-import { TreeSelect } from 'ant-design-vue'
+import RouteMap from '@/router/async/router.map'
+import IconSelector from '@/components/IconSelector'
 
 // 表单字段
 const fields = ['id', 'pid', 'resourceName', 'resourceUrl', 'resourceIcon', 'resourceType', 'sortNo', 'remarks']
 
 export default {
-  components: { ATreeSelect: TreeSelect },
+  components: { IconSelector },
   props: {
     tree: {
       type: Array,
@@ -78,7 +69,6 @@ export default {
   data () {
     return {
       RouteMap,
-      icons,
       treeData: [],
       rules: {
         pid: [{ required: true, message: '必填' }],
@@ -92,7 +82,7 @@ export default {
         pid: null,
         resourceName: null,
         resourceUrl: null,
-        resourceIcon: undefined,
+        resourceIcon: null,
         resourceType: undefined,
         sortNo: null,
         remarks: null
