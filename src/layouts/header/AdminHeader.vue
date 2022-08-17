@@ -10,7 +10,7 @@
         <i-menu class="head-menu" :theme="headerTheme" mode="horizontal" :options="menuData" @select="onSelect" />
       </div>
       <div :class="['admin-header-right', headerTheme]">
-        <header-avatar class="header-item" />
+        <header-avatar class="header-item" @handleModifyPwd="handleModify" />
         <a-dropdown v-if="useI18n" class="lang header-item">
           <div>
             <a-icon type="global" /> {{langAlias}}
@@ -21,20 +21,24 @@
         </a-dropdown>
       </div>
     </div>
+    <modify-pwd v-model="modifyVisible" :model="modifyMdl" />
   </a-layout-header>
 </template>
 
 <script>
 import HeaderAvatar from './HeaderAvatar'
 import IMenu from '../menu/menu'
+import ModifyPwd from './ModifyPwd.vue'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'AdminHeader',
-  components: { IMenu, HeaderAvatar },
+  components: { IMenu, HeaderAvatar, ModifyPwd },
   props: ['collapsed', 'menuData'],
   data () {
     return {
+      modifyVisible: false,
+      modifyMdl: {},
       langList: [
         { key: 'CN', name: '简体中文', alias: '简体' },
         { key: 'HK', name: '繁體中文', alias: '繁體' },
@@ -44,7 +48,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('setting', ['theme', 'isMobile', 'layout', 'systemName', 'lang', 'pageWidth','useI18n']),
+    ...mapState('setting', ['theme', 'isMobile', 'layout', 'systemName', 'lang', 'pageWidth', 'useI18n']),
     headerTheme () {
       if (this.layout == 'side' && this.theme.mode == 'dark' && !this.isMobile) {
         return 'light'
@@ -63,6 +67,10 @@ export default {
     }
   },
   methods: {
+    handleModify () {
+      this.modifyVisible = true
+      this.modifyMdl = {}
+    },
     toggleCollapse () {
       this.$emit('toggleCollapse')
     },
