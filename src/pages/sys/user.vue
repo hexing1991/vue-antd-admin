@@ -40,7 +40,6 @@ import STable from '@/components/table'
 import { page, add, update, del, resetPwd } from '@/api/user'
 import { list } from '@/api/role'
 import CreateForm from './user-create'
-import { Tree } from 'ant-design-vue'
 
 const columns = [{
   title: '序号',
@@ -123,8 +122,7 @@ export default {
   name: 'SysUser',
   components: {
     STable,
-    CreateForm,
-    ATree: Tree
+    CreateForm
   },
   data () {
     return {

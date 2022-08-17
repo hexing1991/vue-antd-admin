@@ -14,10 +14,8 @@
 <script>
 import { getRoleResource } from '@/api/role'
 import { list as listResources } from '@/api/resource'
-import { Tree } from 'ant-design-vue'
 
 export default {
-  components: { ATree: Tree },
   props: {
     visible: {
       type: Boolean,

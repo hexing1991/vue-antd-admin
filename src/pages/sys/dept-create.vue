@@ -46,13 +46,11 @@
 
 <script>
 import pick from 'lodash.pick'
-import { TreeSelect } from 'ant-design-vue'
 
 // 表单字段
 const fields = ['id', 'pid', 'deptName', 'deptCode', 'deptType', 'companyContacts', 'contactsPhone', 'sortNo']
 
 export default {
-  components: { ATreeSelect: TreeSelect },
   props: {
     visible: {
       type: Boolean,

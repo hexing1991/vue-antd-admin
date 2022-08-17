@@ -54,13 +54,11 @@
 
 <script>
 import pick from 'lodash.pick'
-import { TreeSelect, DatePicker } from 'ant-design-vue'
 
 // 表单字段
 const fields = ['id', 'userDept', 'userName', 'userPhone', 'userAccount', 'userRolesArr', 'sortNo', 'remarks', 'accountLocked', 'accountExpired']
 
 export default {
-  components: { ATreeSelect: TreeSelect, ADatePicker: DatePicker },
   props: {
     visible: {
       type: Boolean,
