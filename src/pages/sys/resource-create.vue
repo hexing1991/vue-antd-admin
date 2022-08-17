@@ -1,33 +1,49 @@
 <template>
-  <a-modal :title="title" :width="800" :visible="visible" :confirmLoading="loading" @ok="handleOk" @cancel="handleCancel">
+  <a-modal :title="title" :width="1000" :visible="visible" :confirmLoading="loading" @ok="handleOk" @cancel="handleCancel">
     <a-spin :spinning="loading">
       <a-form-model ref="myForm" :model="form" :rules="rules" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
-        <a-form-model-item label="上级资源" prop="pid">
-          <a-tree-select v-model="form.pid" style="width: 100%;" :tree-data="treeData" :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择上级资源"/>
-        </a-form-model-item>
-        <a-form-model-item label="资源类型" prop="resourceType">
-          <a-select v-model="form.resourceType" style="width: 100%;" placeholder="请选择资源类型" allowClear>
-            <a-select-option v-for="item in $store.state.dict.RESOURCE_TYPE" :key="item.itemValue">{{ item.itemName }}</a-select-option>
-          </a-select>
-        </a-form-model-item>
-        <a-form-model-item label="资源名称" prop="resourceName">
-          <a-input v-model="form.resourceName" :maxLength="20" placeholder="请输入资源名称" />
-        </a-form-model-item>
-        <a-form-model-item label="资源URL" prop="resourceUrl">
-          <a-select v-if="form.resourceType === 1" v-model="form.resourceUrl" style="width: 100%" placeholder="请选择URL">
-            <a-select-option v-for="(v,r) in RouteMap" :key="r">{{ r }}</a-select-option>
-          </a-select>
-          <a-input v-else v-model="form.resourceUrl" :maxLength="50" placeholder="请输入资源URL" />
-        </a-form-model-item>
-        <a-form-model-item v-if="form.resourceType === 0 || form.resourceType === 1" label="资源图标" prop="resourceIcon">
-          <icon-selector v-model="form.resourceIcon"/>
-        </a-form-model-item>
-        <a-form-model-item label="排序" prop="sortNo">
-          <a-input-number v-model="form.sortNo" :min="0" :max="1000" style="width: 100%;" />
-        </a-form-model-item>
-        <a-form-model-item label="备注" prop="remarks">
-          <a-textarea v-model="form.remarks" v-decorator="['remarks', {rules: [{max: 50}]}]" :maxLength="50" />
-        </a-form-model-item>
+        <a-row :gutter="10">
+          <a-col :span="12">
+            <a-form-model-item label="上级资源" prop="pid">
+              <a-tree-select v-model="form.pid" style="width: 100%;" :tree-data="treeData" :getPopupContainer="triggerNode => triggerNode.parentNode" :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择上级资源" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="资源类型" prop="resourceType">
+              <a-select v-model="form.resourceType" style="width: 100%;" placeholder="请选择资源类型" allowClear>
+                <a-select-option v-for="item in $store.state.dict.RESOURCE_TYPE" :key="item.itemValue">{{ item.itemName }}</a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="资源名称" prop="resourceName">
+              <a-input v-model="form.resourceName" :maxLength="20" placeholder="请输入资源名称" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="资源URL" prop="resourceUrl">
+              <a-select v-if="form.resourceType === 1" v-model="form.resourceUrl" style="width: 100%" placeholder="请选择URL">
+                <a-select-option v-for="(v,r) in RouteMap" :key="r">{{ r }}</a-select-option>
+              </a-select>
+              <a-input v-else v-model="form.resourceUrl" :maxLength="50" placeholder="请输入资源URL" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="排序" prop="sortNo">
+              <a-input-number v-model="form.sortNo" :min="0" :max="1000" style="width: 100%;" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="备注" prop="remarks">
+              <a-input v-model="form.remarks" v-decorator="['remarks', {rules: [{max: 50}]}]" :maxLength="50" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24">
+            <a-form-model-item v-if="form.resourceType === 0 || form.resourceType === 1" label="资源图标" prop="resourceIcon" :labelCol="{ span: 2 }" :wrapperCol="{ span: 22 }">
+              <icon-selector v-model="form.resourceIcon" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
       </a-form-model>
     </a-spin>
   </a-modal>

@@ -10,7 +10,7 @@ const service = axios.create({
   baseURL: process.env.VUE_APP_API_BASE_URL,
   method: 'post',
   timeout: 30000,
-  transformRequest: [data => qs.stringify({ ...data }, { strictNullHandling: true })]
+  transformRequest: [data => qs.stringify(data)]
 })
 
 // request interceptor

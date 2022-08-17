@@ -96,7 +96,7 @@ function createAsynRoutes (resources) {
       children: [
         {
           path: '/dashboard/workplace',
-          name: '工作台',
+          name: '首页',
           meta: {
             icon: 'dashboard',
             page: {

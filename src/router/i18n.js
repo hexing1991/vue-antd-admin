@@ -10,7 +10,7 @@ module.exports = {
       home: {name: '首頁'},
       dashboard: {
         name: 'Dashboard',
-        workplace: {name: '工作台'},
+        workplace: {name: '首页'},
         analysis: {name: '分析頁'}
       },
       form: {
