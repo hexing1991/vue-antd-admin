@@ -4,7 +4,7 @@
       <a-tab-pane v-for="v in icons" :tab="v.title" :key="v.key">
         <ul class="beauty-scroll">
           <li v-for="(icon, key) in v.icons" :key="`${v.key}-${key}`" :class="{ 'active': selectedIcon==icon }" @click="handleSelectedIcon(icon)">
-            <a-icon :type="icon" :style="{ fontSize: '36px' }" />
+            <a-icon :type="icon" :style="{ fontSize: '18px' }" />
           </li>
         </ul>
       </a-tab-pane>
@@ -51,7 +51,7 @@ export default {
   methods: {
     handleSelectedIcon (icon) {
       if (this.selectedIcon === icon) {
-        this.selectedIcon = null
+        this.selectedIcon = ''
         this.$emit('change', null)
       } else {
         this.selectedIcon = icon
@@ -77,7 +77,7 @@ ul {
   list-style: none;
   padding: 0;
   overflow-y: scroll;
-  height: 150px;
+  height: 300px;
 
   li {
     display: inline-block;
