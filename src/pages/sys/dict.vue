@@ -122,7 +122,7 @@ export default {
     this.loadDicts().then(() => this.loadData())
   },
   methods: {
-    async loadDicts () {
+    async loadDicts (code) {
       const res = await list()
       res.data.sort((a, b) => a.code.localeCompare(b.code))
       this.treeData = res.data.map(({ id: key, name: title, code }) => ({
@@ -131,10 +131,18 @@ export default {
         code,
         scopedSlots: { title: 'custom' }
       }))
-      this.defaultDictId = [this.treeData[0].key]
-      this.dictTitle = this.treeData[0].title
-      this.queryParam.dictId = this.treeData[0].key
-      this.currentDict = this.treeData[0]
+      if (code) {
+        const item = this.treeData.find(m => m.code === code)
+        this.defaultDictId = [item.key]
+        this.dictTitle = item.title
+        this.queryParam.dictId = item.key
+        this.currentDict = item
+      } else {
+        this.defaultDictId = [this.treeData[0].key]
+        this.dictTitle = this.treeData[0].title
+        this.queryParam.dictId = this.treeData[0].key
+        this.currentDict = this.treeData[0]
+      }
     },
     handleAdd () {
       this.mdl = {}
@@ -153,7 +161,7 @@ export default {
           const res = await del(r.id)
           if (res.code !== 0) return this.$message.error(res.msg)
           this.$message.success('删除成功')
-          this.reload()
+          this.loadDicts().then(() => this.loadData())
         }
       })
     },
@@ -188,13 +196,15 @@ export default {
       this.dicts = data
     },
     async handleOk (values) {
+      const flag = this.treeData.some(m => m.code === values.code && m.key !== values.id)
+      if (flag) return this.$message.warning(`编码 ${values.code} 已存在`)
       this.confirmLoading = true
       const res = values.id ? await update(values) : await add(values)
       this.confirmLoading = false
       if (res.code !== 0) return this.$message.error(res.msg)
       this.visible = false
       this.$message.success(values.id ? '修改成功' : '新增成功')
-      this.$emit('refresh', null, this)
+      this.loadDicts(values.code).then(() => this.loadData())
     },
     async handleOkItem (values) {
       this.confirmLoadingItem = true
